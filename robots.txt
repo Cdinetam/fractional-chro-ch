@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://fractional-chro.ch/sitemap.xml
