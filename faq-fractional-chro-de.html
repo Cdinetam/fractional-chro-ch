@@ -20,10 +20,27 @@
         .lang-switch { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 14px; color: #566176; font-size: 0.95rem; }
         .lang-switch a { color: #566176; text-decoration: none; }
         .lang-switch .active { color: #1b2330; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
-        .faq-table-wrap { overflow-x: auto; margin: 10px 0 14px; }
-        .faq-table { width: 100%; min-width: 640px; border-collapse: collapse; font-size: 0.94rem; }
-        .faq-table th, .faq-table td { border: 1px solid #d9e0ea; padding: 8px 10px; text-align: left; vertical-align: top; }
-        .faq-table th { background: #f0f4fb; }
+        .be-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0 14px; }
+        .be-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 0 0 14px; }
+        .be-box { background: #f3f7fd; border: 1px solid #d9e0ea; border-radius: 10px; padding: 12px; }
+        .be-label { font-size: 12px; color: #566176; margin-bottom: 4px; }
+        .be-row { display: flex; align-items: center; gap: 8px; }
+        .be-row input[type="range"] { flex: 1; }
+        .be-value { font-size: 14px; font-weight: 600; min-width: 68px; text-align: right; }
+        .be-value-blue { color: #185fa5; }
+        .be-value-green { color: #0f6e56; }
+        .be-kpi { text-align: center; }
+        .be-kpi .big { font-size: 22px; font-weight: 600; }
+        .be-chart-wrap { position: relative; width: 100%; height: 280px; margin: 0 0 10px; }
+        .be-legend { display: flex; gap: 20px; margin-top: 10px; font-size: 12px; color: #566176; flex-wrap: wrap; }
+        .be-legend span { display: flex; align-items: center; gap: 6px; }
+        .be-line-blue { width: 24px; height: 3px; background: #378add; border-radius: 2px; display: inline-block; }
+        .be-line-green { width: 24px; height: 3px; background: #1d9e75; border-radius: 2px; display: inline-block; }
+        .be-bar { width: 12px; height: 12px; background: #1d9e7520; border: 1px solid #1d9e75; border-radius: 2px; display: inline-block; }
+        @media (max-width: 740px) {
+            .be-grid-2, .be-grid-3 { grid-template-columns: 1fr; }
+            .be-value { min-width: 76px; }
+        }
     </style>
 </head>
 <body>
@@ -47,62 +64,57 @@
 
             <h2>Was kostet es wirklich, wenn wir keine dedizierte HR-Führung haben - und lohnt sich ein Fractional CHRO im Vergleich?</h2>
             <p>Die häufigste Annahme lautet: kein CHRO = keine Kosten. Das stimmt nicht. Ohne HR-Führung entstehen versteckte Kosten, die sich über Budgetlinien verteilen und deshalb selten als Gesamtbild sichtbar werden - bis der Schaden eingetreten ist. Die folgende Tabelle zeigt einen typischen Vergleich über 3 Jahre für ein Unternehmen mit 50-250 Mitarbeitenden.</p>
-            <div class="faq-table-wrap">
-                <table class="faq-table">
-                    <thead>
-                        <tr>
-                            <th>Kostenart</th>
-                            <th>Kategorie</th>
-                            <th>Nichts tun</th>
-                            <th>Fractional CHRO</th>
-                            <th>Vollzeit-CHRO</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Personalkosten CHRO</td>
-                            <td>Direkt</td>
-                            <td>-</td>
-                            <td>80-120k CHF</td>
-                            <td>250-320k CHF</td>
-                        </tr>
-                        <tr>
-                            <td>Fehlbesetzung &amp; Fluktuation</td>
-                            <td>Versteckt</td>
-                            <td>80-200k CHF</td>
-                            <td>20-50k CHF</td>
-                            <td>15-40k CHF</td>
-                        </tr>
-                        <tr>
-                            <td>Produktivitätsverlust / Kultur</td>
-                            <td>Versteckt</td>
-                            <td>40-100k CHF</td>
-                            <td>10-35k CHF</td>
-                            <td>5-15k CHF</td>
-                        </tr>
-                        <tr>
-                            <td>Compliance &amp; Rechtsrisiken</td>
-                            <td>Versteckt</td>
-                            <td>20-80k CHF</td>
-                            <td>5-10k CHF</td>
-                            <td>2-8k CHF</td>
-                        </tr>
-                        <tr>
-                            <td>Recruiting ohne Strategie</td>
-                            <td>Versteckt</td>
-                            <td>30-90k CHF</td>
-                            <td>10-20k CHF</td>
-                            <td>8-15k CHF</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Geschätzte Gesamtkosten / 3 J.</strong></td>
-                            <td></td>
-                            <td><strong>170-470k CHF</strong></td>
-                            <td><strong>105-225k CHF</strong></td>
-                            <td><strong>280-400k CHF</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="be-grid-2">
+                <div class="be-box">
+                    <div class="be-label">Vollzeit-CHRO / Jahr</div>
+                    <div class="be-row">
+                        <input type="range" id="be-ft-cost" min="100" max="500" value="280" step="10">
+                        <span class="be-value be-value-blue" id="be-ft-label">280k CHF</span>
+                    </div>
+                </div>
+                <div class="be-box">
+                    <div class="be-label">Fractional CHRO Start / Jahr</div>
+                    <div class="be-row">
+                        <input type="range" id="be-frac-start" min="20" max="200" value="60" step="5">
+                        <span class="be-value be-value-green" id="be-frac-start-label">60k CHF</span>
+                    </div>
+                </div>
+                <div class="be-box">
+                    <div class="be-label">Jährliches Wachstum Fractional</div>
+                    <div class="be-row">
+                        <input type="range" id="be-frac-growth" min="5" max="60" value="25" step="5">
+                        <span class="be-value be-value-green" id="be-frac-growth-label">25%</span>
+                    </div>
+                </div>
+                <div class="be-box">
+                    <div class="be-label">Betrachtungszeitraum</div>
+                    <div class="be-row">
+                        <input type="range" id="be-years" min="2" max="10" value="6" step="1">
+                        <span class="be-value" id="be-years-label">6 J.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="be-grid-3">
+                <div class="be-box be-kpi">
+                    <div class="be-label">Breakeven in</div>
+                    <div class="big" id="be-year">-</div>
+                </div>
+                <div class="be-box be-kpi">
+                    <div class="be-label">Einsparung bis Breakeven</div>
+                    <div class="big be-value-green" id="be-saving">-</div>
+                </div>
+                <div class="be-box be-kpi">
+                    <div class="be-label">Gesamteinsparung</div>
+                    <div class="big be-value-green" id="be-total-saving">-</div>
+                </div>
+            </div>
+            <div class="be-chart-wrap">
+                <canvas id="be-chart"></canvas>
+            </div>
+            <div class="be-legend">
+                <span><span class="be-line-blue"></span>Vollzeit-CHRO</span>
+                <span><span class="be-line-green"></span>Fractional CHRO</span>
+                <span><span class="be-bar"></span>Einsparung</span>
             </div>
             <p><strong>Fazit:</strong> "Nichts tun" ist in den meisten Fällen die teuerste Option - nicht weil eine Rechnung kommt, sondern weil die Kosten unsichtbar bleiben. Ein Fractional CHRO bietet den besten Einstieg: volle HR-Kompetenz, flexibel skalierbar, ohne das Fixkostenrisiko einer Vollzeitstelle. Der Wechsel zu einem Vollzeit-CHRO lohnt sich erst, wenn Grösse und Komplexität es wirklich erfordern - in der Praxis typischerweise ab 250-300 Mitarbeitenden, und auch dann haben viele Unternehmen schlicht keinen dedizierten CHRO.</p>
 
@@ -115,5 +127,132 @@
             <p><a href="./index.html">Zurück zur Startseite</a></p>
         </div>
     </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script>
+    let beChart;
+
+    function beCompute() {
+        const ftCost = +document.getElementById('be-ft-cost').value;
+        const fracStart = +document.getElementById('be-frac-start').value;
+        const growth = +document.getElementById('be-frac-growth').value / 100;
+        const years = +document.getElementById('be-years').value;
+
+        document.getElementById('be-ft-label').textContent = ftCost + 'k CHF';
+        document.getElementById('be-frac-start-label').textContent = fracStart + 'k CHF';
+        document.getElementById('be-frac-growth-label').textContent = document.getElementById('be-frac-growth').value + '%';
+        document.getElementById('be-years-label').textContent = years + ' J.';
+
+        const labels = [];
+        const ftData = [];
+        const fracData = [];
+        let beText = 'Nach >' + years + ' J.';
+        let beSaving = 0;
+        let totalSaving = 0;
+        let beFound = false;
+
+        for (let y = 1; y <= years; y++) {
+            labels.push('Jahr ' + y);
+            const ft = ftCost;
+            const frac = Math.min(fracStart * Math.pow(1 + growth, y - 1), ftCost * 1.1);
+            const roundedFrac = Math.round(frac);
+            const diff = ft - roundedFrac;
+            ftData.push(ft);
+            fracData.push(roundedFrac);
+            if (diff > 0) {
+                totalSaving += diff;
+            }
+            if (!beFound && roundedFrac >= ft) {
+                beText = 'Jahr ' + y;
+                beSaving = totalSaving + diff;
+                beFound = true;
+            }
+        }
+
+        if (!beFound) {
+            beSaving = totalSaving;
+        }
+
+        document.getElementById('be-year').textContent = beText;
+        document.getElementById('be-saving').textContent = '+' + Math.round(beSaving) + 'k CHF';
+        document.getElementById('be-total-saving').textContent = '+' + Math.round(totalSaving) + 'k CHF';
+
+        const savingData = ftData.map((ft, i) => Math.max(0, ft - fracData[i]));
+        if (beChart) {
+            beChart.destroy();
+        }
+
+        beChart = new Chart(document.getElementById('be-chart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Einsparung',
+                        data: savingData,
+                        backgroundColor: '#1d9e7520',
+                        borderColor: '#1d9e75',
+                        borderWidth: 1,
+                        order: 3,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Vollzeit-CHRO',
+                        data: ftData,
+                        type: 'line',
+                        borderColor: '#378add',
+                        borderWidth: 2.5,
+                        borderDash: [6, 3],
+                        pointRadius: 0,
+                        fill: false,
+                        order: 1,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Fractional CHRO',
+                        data: fracData,
+                        type: 'line',
+                        borderColor: '#1d9e75',
+                        borderWidth: 2.5,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#1d9e75',
+                        fill: false,
+                        order: 2,
+                        yAxisID: 'y'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ' ' + context.dataset.label + ': ' + Math.round(context.parsed.y) + 'k CHF';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: function(v) { return v + 'k'; }, font: { size: 11 }, color: '#888780' },
+                        grid: { color: 'rgba(136,135,128,0.1)' }
+                    },
+                    x: {
+                        ticks: { font: { size: 11 }, color: '#888780' },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    }
+
+    ['be-ft-cost', 'be-frac-start', 'be-frac-growth', 'be-years'].forEach(function(id) {
+        document.getElementById(id).addEventListener('input', beCompute);
+    });
+    beCompute();
+    </script>
 </body>
 </html>
