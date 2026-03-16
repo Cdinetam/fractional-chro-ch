@@ -12,6 +12,12 @@
     <link rel="alternate" hreflang="x-default" href="https://www.fractional-chro.ch/faq-fractional-chro-de.html">
     <script defer src="/_vercel/insights/script.js"></script>
     <style>
+        :root {
+            --color-background-secondary: #f3f7fd;
+            --color-text-secondary: #566176;
+            --border-radius-md: 10px;
+            --color-border-tertiary: #d9e0ea;
+        }
         body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f7f9fc; color: #1b2330; line-height: 1.7; }
         main { max-width: 860px; margin: 0 auto; padding: 42px 20px 56px; }
         .card { background: #fff; border: 1px solid #d9e0ea; border-radius: 12px; padding: 28px; }
@@ -58,6 +64,100 @@
             <h3>Fazit</h3>
             <p>Ein CHRO zahlt sich nicht trotz seiner Kosten aus — sondern wegen seiner Wirkung. Der Fractional CHRO ist dabei die effizienteste Lösung: voller strategischer Impakt, ohne das Fixkostenrisiko einer Vollzeitstelle. Die "Nichts-tun-Kosten" sinken nicht von alleine — sie brauchen jemanden, der aktiv eingreift.</p>
 
+            <div style="padding: 1rem 0 0;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem;">
+                <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.875rem;">
+                  <div style="font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px;">Vollzeit-CHRO / Jahr</div>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <input type="range" id="ft-cost" min="100" max="500" value="280" step="10" style="flex:1;">
+                    <span style="font-size:13px;font-weight:500;min-width:64px;color:#185FA5;" id="ft-label">280k CHF</span>
+                  </div>
+                </div>
+                <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.875rem;">
+                  <div style="font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px;">Fractional CHRO Start / Jahr</div>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <input type="range" id="frac-start" min="20" max="200" value="60" step="5" style="flex:1;">
+                    <span style="font-size:13px;font-weight:500;min-width:64px;color:#0F6E56;" id="frac-start-label">60k CHF</span>
+                  </div>
+                </div>
+                <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.875rem;">
+                  <div style="font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px;">Wachstum Fractional / Jahr</div>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <input type="range" id="frac-growth" min="5" max="60" value="25" step="5" style="flex:1;">
+                    <span style="font-size:13px;font-weight:500;min-width:40px;color:#0F6E56;" id="frac-growth-label">25%</span>
+                  </div>
+                </div>
+                <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.875rem;">
+                  <div style="font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px;">Betrachtungszeitraum</div>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <input type="range" id="years" min="2" max="10" value="6" step="1" style="flex:1;">
+                    <span style="font-size:13px;font-weight:500;min-width:40px;" id="years-label">6 J.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.875rem; margin-bottom: 1rem;">
+                <div style="font-size: 11px; color: var(--color-text-secondary); margin-bottom: 8px;">Versteckte Kosten "Nichts tun" — Schätzung der jährlichen Folgekosten</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                  <div>
+                    <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:3px;">Fluktuation (Fehlbesetzungen, Abgänge)</div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <input type="range" id="c-turnover" min="0" max="200" value="80" step="10" style="flex:1;">
+                      <span style="font-size:12px;font-weight:500;min-width:52px;color:#993C1D;" id="c-turnover-label">80k CHF</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:3px;">Produktivitätsverlust / schlechte Kultur</div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <input type="range" id="c-prod" min="0" max="200" value="50" step="10" style="flex:1;">
+                      <span style="font-size:12px;font-weight:500;min-width:52px;color:#993C1D;" id="c-prod-label">50k CHF</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:3px;">Compliance-Risiken & Rechtskosten</div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <input type="range" id="c-legal" min="0" max="150" value="30" step="5" style="flex:1;">
+                      <span style="font-size:12px;font-weight:500;min-width:52px;color:#993C1D;" id="c-legal-label">30k CHF</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:3px;">Wachstum der Folgekosten / Jahr</div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <input type="range" id="c-growth" min="0" max="30" value="10" step="5" style="flex:1;">
+                      <span style="font-size:12px;font-weight:500;min-width:40px;color:#993C1D;" id="c-growth-label">10%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:1.25rem;">
+                <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;text-align:center;">
+                  <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">Breakeven Fractional vs. Vollzeit</div>
+                  <div style="font-size:20px;font-weight:500;" id="be-year">—</div>
+                </div>
+                <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;text-align:center;">
+                  <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">Einsparung Fractional vs. Nichts</div>
+                  <div style="font-size:20px;font-weight:500;color:#0F6E56;" id="frac-vs-nothing">—</div>
+                </div>
+                <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;text-align:center;">
+                  <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">Günstigste Option gesamt</div>
+                  <div style="font-size:20px;font-weight:500;" id="best-option">—</div>
+                </div>
+              </div>
+
+              <div style="position:relative;width:100%;height:300px;">
+                <canvas id="beChart"></canvas>
+              </div>
+
+              <div style="display:flex;gap:20px;margin-top:12px;font-size:12px;color:var(--color-text-secondary);flex-wrap:wrap;">
+                <span style="display:flex;align-items:center;gap:6px;"><span style="width:24px;height:3px;background:#378ADD;border-radius:2px;display:inline-block;border-top:2px dashed #378ADD;"></span> Vollzeit-CHRO</span>
+                <span style="display:flex;align-items:center;gap:6px;"><span style="width:24px;height:3px;background:#1D9E75;border-radius:2px;display:inline-block;"></span> Fractional CHRO</span>
+                <span style="display:flex;align-items:center;gap:6px;"><span style="width:24px;height:3px;background:#D85A30;border-radius:2px;display:inline-block;"></span> Nichts tun (Folgekosten)</span>
+              </div>
+
+              <div style="margin-top:1rem;padding:0.875rem;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);font-size:12px;color:var(--color-text-secondary);line-height:1.6;" id="insight-box"></div>
+            </div>
+
             <h2>Wo erhalte ich weiterführende Beratung?</h2>
             <p>
                 Diese Seite ist ein Informationsangebot. Für konkrete Mandate und Umsetzung besuchen Sie bitte
@@ -67,5 +167,139 @@
             <p><a href="./index.html">Zurück zur Startseite</a></p>
         </div>
     </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script>
+let chart;
+
+function compute() {
+  const ftCost = +document.getElementById('ft-cost').value;
+  const fracStart = +document.getElementById('frac-start').value;
+  const fracGrowth = +document.getElementById('frac-growth').value / 100;
+  const years = +document.getElementById('years').value;
+  const cTurnover = +document.getElementById('c-turnover').value;
+  const cProd = +document.getElementById('c-prod').value;
+  const cLegal = +document.getElementById('c-legal').value;
+  const cGrowth = +document.getElementById('c-growth').value / 100;
+
+  document.getElementById('ft-label').textContent = ftCost + 'k CHF';
+  document.getElementById('frac-start-label').textContent = fracStart + 'k CHF';
+  document.getElementById('frac-growth-label').textContent = document.getElementById('frac-growth').value + '%';
+  document.getElementById('years-label').textContent = years + ' J.';
+  document.getElementById('c-turnover-label').textContent = cTurnover + 'k CHF';
+  document.getElementById('c-prod-label').textContent = cProd + 'k CHF';
+  document.getElementById('c-legal-label').textContent = cLegal + 'k CHF';
+  document.getElementById('c-growth-label').textContent = document.getElementById('c-growth').value + '%';
+
+  const labels = [];
+  const ftData = [], fracData = [], nothingData = [];
+  let beYear = null, totalFrac = 0, totalFt = 0, totalNothing = 0;
+
+  for (let y = 1; y <= years; y++) {
+    labels.push('Jahr ' + y);
+    const ft = ftCost;
+    const frac = Math.round(Math.min(fracStart * Math.pow(1 + fracGrowth, y - 1), ftCost * 1.15));
+    const baseNothing = cTurnover + cProd + cLegal;
+    const nothing = Math.round(baseNothing * Math.pow(1 + cGrowth, y - 1));
+    ftData.push(ft);
+    fracData.push(frac);
+    nothingData.push(nothing);
+    totalFt += ft;
+    totalFrac += frac;
+    totalNothing += nothing;
+    if (!beYear && frac >= ft) beYear = y;
+  }
+
+  const fracVsNothing = totalNothing - totalFrac;
+  const options = [
+    { name: 'Fractional', total: totalFrac },
+    { name: 'Vollzeit', total: totalFt },
+    { name: 'Nichts tun', total: totalNothing }
+  ].sort((a, b) => a.total - b.total);
+
+  document.getElementById('be-year').textContent = beYear ? 'Jahr ' + beYear : '> ' + years + ' J.';
+  document.getElementById('frac-vs-nothing').textContent = fracVsNothing > 0 ? '+' + Math.round(fracVsNothing) + 'k' : Math.round(fracVsNothing) + 'k';
+
+  const best = options[0];
+  const bestEl = document.getElementById('best-option');
+  bestEl.textContent = best.name;
+  bestEl.style.color = best.name === 'Fractional' ? '#0F6E56' : best.name === 'Vollzeit' ? '#185FA5' : '#993C1D';
+
+  const insight = document.getElementById('insight-box');
+  const nothingExpensive = totalNothing > totalFrac;
+  if (nothingExpensive) {
+    insight.innerHTML = `Über ${years} Jahre kostet "Nichts tun" insgesamt <strong>${Math.round(totalNothing)}k CHF</strong> — das sind <strong style="color:#0F6E56">${Math.round(totalNothing - totalFrac)}k CHF mehr</strong> als ein Fractional CHRO (${Math.round(totalFrac)}k CHF). Die versteckten Kosten sind real, auch wenn sie nicht auf einer Rechnung erscheinen.`;
+  } else {
+    insight.innerHTML = `Mit diesen Parametern liegen die Folgekosten von "Nichts tun" (<strong>${Math.round(totalNothing)}k CHF</strong>) noch unter dem Fractional CHRO (${Math.round(totalFrac)}k CHF). Erhöhe die Schätzungen für Fluktuation oder Produktivitätsverlust — in der Praxis werden diese Kosten oft unterschätzt.`;
+  }
+
+  if (chart) chart.destroy();
+  chart = new Chart(document.getElementById('beChart'), {
+    data: {
+      labels,
+      datasets: [
+        {
+          type: 'line',
+          label: 'Vollzeit-CHRO',
+          data: ftData,
+          borderColor: '#378ADD',
+          borderWidth: 2.5,
+          borderDash: [6, 4],
+          pointRadius: 0,
+          fill: false,
+          order: 1
+        },
+        {
+          type: 'line',
+          label: 'Fractional CHRO',
+          data: fracData,
+          borderColor: '#1D9E75',
+          borderWidth: 2.5,
+          pointRadius: 4,
+          pointBackgroundColor: '#1D9E75',
+          fill: false,
+          order: 2
+        },
+        {
+          type: 'bar',
+          label: 'Nichts tun',
+          data: nothingData,
+          backgroundColor: '#D85A3022',
+          borderColor: '#D85A30',
+          borderWidth: 1.5,
+          order: 3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ' ' + ctx.dataset.label + ': ' + Math.round(ctx.parsed.y) + 'k CHF'
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { callback: v => v + 'k', font: { size: 11 }, color: '#888780' },
+          grid: { color: 'rgba(136,135,128,0.12)' }
+        },
+        x: {
+          ticks: { font: { size: 11 }, color: '#888780' },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
+['ft-cost','frac-start','frac-growth','years','c-turnover','c-prod','c-legal','c-growth'].forEach(id => {
+  document.getElementById(id).addEventListener('input', compute);
+});
+compute();
+    </script>
 </body>
 </html>
