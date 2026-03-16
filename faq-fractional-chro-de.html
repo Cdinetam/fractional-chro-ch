@@ -61,10 +61,19 @@
             <p>Mit einem Fractional CHRO (100k CHF/Jahr):<br>Der CHRO führt im ersten Jahr strukturierte Hiring-Prozesse ein, etabliert ein Compliance-Framework und startet gezielte Massnahmen zur Mitarbeiterbindung. Die Folge: Die Nichts-tun-Kosten sinken im ersten Jahr um rund –70% auf ca. 78k CHF. Über die Jahre verstärkt sich dieser Effekt — weil Systeme, Schulungen und Prozesse kumuliert wirken. Nach fünf Jahren sind die Nichts-tun-Kosten auf einen Bruchteil des Ausgangswerts gesunken.</p>
             <p>Gesamtkosten im Vergleich über 5 Jahre:<br>Kein CHRO kostet rund 1'100k CHF in Folgekosten. Mit Fractional CHRO (100k/J., +20%/Jahr) belaufen sich die Gesamtkosten auf ca. 530k CHF — eine Einsparung von über 570k CHF. Ein Vollzeit-CHRO (250k/J.) erzielt einen ähnlichen Effekt auf die Folgekosten, kostet aber insgesamt deutlich mehr — die Einsparung gegenüber dem Fractional-Modell beträgt über 5 Jahre rund 800k CHF.</p>
 
-            <h3>Fazit</h3>
-            <p>Ein CHRO zahlt sich nicht trotz seiner Kosten aus — sondern wegen seiner Wirkung. Der Fractional CHRO ist dabei die effizienteste Lösung: voller strategischer Impakt, ohne das Fixkostenrisiko einer Vollzeitstelle. Die "Nichts-tun-Kosten" sinken nicht von alleine — sie brauchen jemanden, der aktiv eingreift.</p>
-
             <div style="padding: 1rem 0 0;">
+              <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#566176;margin-bottom:6px;">INTERAKTIVER RECHNER - BASIS 260K CHF</div>
+              <h3 style="margin:0 0 6px;font-size:30px;line-height:1.2;">CHRO-Kosten, Nichts-tun &amp; Einsparungsfläche</h3>
+              <p style="margin:0 0 12px;font-size:13px;color:#566176;">Kalibriert: 100k CHRO → Nichts-tun sinkt um ~70% (260k → ~78k). Je mehr investiert, desto stärker die Reduktion — Regler passen sich live an.</p>
+
+              <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.875rem; margin-bottom: 1rem;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="font-size:13px;color:#444;min-width:120px;">Betrachtungszeitraum</div>
+                  <input type="range" id="years" min="2" max="10" value="5" step="1" style="flex:1;">
+                  <span style="font-size:18px;font-weight:500;min-width:68px;text-align:right;" id="years-label">5 Jahre</span>
+                </div>
+              </div>
+
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem;">
                 <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.875rem;">
                   <div style="font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px;">Vollzeit-CHRO / Jahr</div>
@@ -85,13 +94,6 @@
                   <div style="display:flex;align-items:center;gap:8px;">
                     <input type="range" id="frac-growth" min="5" max="60" value="25" step="5" style="flex:1;">
                     <span style="font-size:13px;font-weight:500;min-width:40px;color:#0F6E56;" id="frac-growth-label">25%</span>
-                  </div>
-                </div>
-                <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.875rem;">
-                  <div style="font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px;">Betrachtungszeitraum</div>
-                  <div style="display:flex;align-items:center;gap:8px;">
-                    <input type="range" id="years" min="2" max="10" value="6" step="1" style="flex:1;">
-                    <span style="font-size:13px;font-weight:500;min-width:40px;" id="years-label">6 J.</span>
                   </div>
                 </div>
               </div>
@@ -152,11 +154,30 @@
               <div style="display:flex;gap:20px;margin-top:12px;font-size:12px;color:var(--color-text-secondary);flex-wrap:wrap;">
                 <span style="display:flex;align-items:center;gap:6px;"><span style="width:24px;height:3px;background:#378ADD;border-radius:2px;display:inline-block;border-top:2px dashed #378ADD;"></span> Vollzeit-CHRO</span>
                 <span style="display:flex;align-items:center;gap:6px;"><span style="width:24px;height:3px;background:#1D9E75;border-radius:2px;display:inline-block;"></span> Fractional CHRO</span>
-                <span style="display:flex;align-items:center;gap:6px;"><span style="width:24px;height:3px;background:#D85A30;border-radius:2px;display:inline-block;"></span> Nichts tun (Folgekosten)</span>
+                <span style="display:flex;align-items:center;gap:6px;"><span style="width:24px;height:3px;background:#D85A30;border-radius:2px;display:inline-block;"></span> Nichts-tun (auto, live)</span>
+                <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;background:#1D9E7520;border:1px solid #1D9E75;border-radius:2px;display:inline-block;"></span> Einsparung Fractional vs. Vollzeit</span>
               </div>
 
-              <div style="margin-top:1rem;padding:0.875rem;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);font-size:12px;color:var(--color-text-secondary);line-height:1.6;" id="insight-box"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px;">
+                <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:0.9rem;">
+                  <div style="font-size:12px;color:var(--color-text-secondary);">Kein CHRO</div>
+                  <div style="font-size:30px;font-weight:500;color:#993C1D;" id="total-nothing">0k CHF</div>
+                </div>
+                <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:0.9rem;">
+                  <div style="font-size:12px;color:var(--color-text-secondary);">Fractional CHRO</div>
+                  <div style="font-size:30px;font-weight:500;color:#0F6E56;" id="total-frac">0k CHF</div>
+                </div>
+                <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:0.9rem;">
+                  <div style="font-size:12px;color:var(--color-text-secondary);">Vollzeit-CHRO</div>
+                  <div style="font-size:30px;font-weight:500;color:#185FA5;" id="total-ft">0k CHF</div>
+                </div>
+              </div>
+
+              <div style="margin-top:1rem;padding:0.875rem;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);font-size:12px;color:var(--color-text-secondary);line-height:1.6;" id="summary-line"></div>
             </div>
+
+            <h3>Fazit</h3>
+            <p>Ein CHRO zahlt sich nicht trotz seiner Kosten aus — sondern wegen seiner Wirkung. Der Fractional CHRO ist dabei die effizienteste Lösung: voller strategischer Impakt, ohne das Fixkostenrisiko einer Vollzeitstelle. Die "Nichts-tun-Kosten" sinken nicht von alleine — sie brauchen jemanden, der aktiv eingreift.</p>
 
             <h2>Wo erhalte ich weiterführende Beratung?</h2>
             <p>
@@ -184,7 +205,7 @@ function compute() {
   document.getElementById('ft-label').textContent = ftCost + 'k CHF';
   document.getElementById('frac-start-label').textContent = fracStart + 'k CHF';
   document.getElementById('frac-growth-label').textContent = document.getElementById('frac-growth').value + '%';
-  document.getElementById('years-label').textContent = years + ' J.';
+  document.getElementById('years-label').textContent = years + ' Jahre';
   document.getElementById('c-turnover-label').textContent = cTurnover + 'k CHF';
   document.getElementById('c-prod-label').textContent = cProd + 'k CHF';
   document.getElementById('c-legal-label').textContent = cLegal + 'k CHF';
@@ -224,30 +245,20 @@ function compute() {
   bestEl.textContent = best.name;
   bestEl.style.color = best.name === 'Fractional' ? '#0F6E56' : best.name === 'Vollzeit' ? '#185FA5' : '#993C1D';
 
-  const insight = document.getElementById('insight-box');
-  const nothingExpensive = totalNothing > totalFrac;
-  if (nothingExpensive) {
-    insight.innerHTML = `Über ${years} Jahre kostet "Nichts tun" insgesamt <strong>${Math.round(totalNothing)}k CHF</strong> — das sind <strong style="color:#0F6E56">${Math.round(totalNothing - totalFrac)}k CHF mehr</strong> als ein Fractional CHRO (${Math.round(totalFrac)}k CHF). Die versteckten Kosten sind real, auch wenn sie nicht auf einer Rechnung erscheinen.`;
-  } else {
-    insight.innerHTML = `Mit diesen Parametern liegen die Folgekosten von "Nichts tun" (<strong>${Math.round(totalNothing)}k CHF</strong>) noch unter dem Fractional CHRO (${Math.round(totalFrac)}k CHF). Erhöhe die Schätzungen für Fluktuation oder Produktivitätsverlust — in der Praxis werden diese Kosten oft unterschätzt.`;
-  }
+  document.getElementById('total-nothing').textContent = Math.round(totalNothing) + 'k CHF';
+  document.getElementById('total-frac').textContent = Math.round(totalFrac) + 'k CHF';
+  document.getElementById('total-ft').textContent = Math.round(totalFt) + 'k CHF';
+
+  const summary = document.getElementById('summary-line');
+  const saveVsNothing = Math.round(totalNothing - totalFrac);
+  const saveVsFt = Math.round(totalFt - totalFrac);
+  summary.innerHTML = `Kein CHRO: <strong>${Math.round(totalNothing)}k CHF</strong>. Fractional CHRO: <strong style="color:#0F6E56">${Math.round(totalFrac)}k CHF</strong> (${saveVsNothing >= 0 ? '-' + saveVsNothing : '+' + Math.abs(saveVsNothing)}k vs. Kein CHRO). Vollzeit-CHRO: <strong>${Math.round(totalFt)}k CHF</strong> (${saveVsFt >= 0 ? '+' + saveVsFt : '-' + Math.abs(saveVsFt)}k vs. Fractional).`;
 
   if (chart) chart.destroy();
   chart = new Chart(document.getElementById('beChart'), {
     data: {
       labels,
       datasets: [
-        {
-          type: 'line',
-          label: 'Vollzeit-CHRO',
-          data: ftData,
-          borderColor: '#378ADD',
-          borderWidth: 2.5,
-          borderDash: [6, 4],
-          pointRadius: 0,
-          fill: false,
-          order: 1
-        },
         {
           type: 'line',
           label: 'Fractional CHRO',
@@ -257,6 +268,18 @@ function compute() {
           pointRadius: 4,
           pointBackgroundColor: '#1D9E75',
           fill: false,
+          order: 1
+        },
+        {
+          type: 'line',
+          label: 'Vollzeit-CHRO',
+          data: ftData,
+          borderColor: '#378ADD',
+          borderWidth: 2.5,
+          borderDash: [6, 4],
+          pointRadius: 0,
+          fill: '-1',
+          backgroundColor: '#1D9E751f',
           order: 2
         },
         {
