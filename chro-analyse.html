@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fractional CHRO — Kostenanalyse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --font-serif: 'DM Serif Display', Georgia, serif;
+      --font-sans:  'DM Sans', system-ui, sans-serif;
+      --color-bg:          #FAFAF8;
+      --color-bg-secondary:#F1EFE8;
+      --color-surface:     #FFFFFF;
+      --color-border:      rgba(44,44,42,0.12);
+      --color-border-med:  rgba(44,44,42,0.22);
+      --color-text:        #2C2C2A;
+      --color-text-sec:    #5F5E5A;
+      --color-text-ter:    #888780;
+      --color-red:         #D85A30;
+      --color-red-light:   #FAECE7;
+      --color-red-dark:    #993C1D;
+      --color-green:       #1D9E75;
+      --color-green-light: #E1F5EE;
+      --color-green-dark:  #085041;
+      --color-blue:        #378ADD;
+      --color-blue-light:  #E6F1FB;
+      --color-blue-dark:   #185FA5;
+      --color-amber-light: #FAEEDA;
+      --color-amber-dark:  #854F0B;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       LAYOUT
+    ============================================================ */
+    .page { max-width: 900px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+
+    .section { margin-bottom: 4rem; }
+
+    .divider {
+      border: none;
+      border-top: 0.5px solid var(--color-border);
+      margin: 3rem 0;
+    }
+
+    /* ============================================================
+       TYPOGRAPHY
+    ============================================================ */
+    .tag {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-text-ter);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: clamp(26px, 4vw, 38px);
+      line-height: 1.25;
+      color: var(--color-text);
+      margin-bottom: 1.5rem;
+      font-weight: 400;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(20px, 3vw, 26px);
+      line-height: 1.3;
+      color: var(--color-text);
+      margin-bottom: 1rem;
+      font-weight: 400;
+    }
+
+    .lead {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--color-text-sec);
+      margin-bottom: 1.25rem;
+    }
+    .lead strong { color: var(--color-text); font-weight: 500; }
+
+    /* ============================================================
+       COST DRIVERS GRID
+    ============================================================ */
+    .drivers-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 2rem 0;
+    }
+
+    .driver-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--color-border);
+      border-left: 3px solid var(--color-red);
+      padding: 1rem;
+      transition: box-shadow 0.2s;
+    }
+    .driver-card:hover { box-shadow: var(--shadow-sm); }
+    .driver-card.total { border-left-color: var(--color-green); }
+
+    .driver-cat {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--color-red-dark);
+      margin-bottom: 4px;
+    }
+    .driver-card.total .driver-cat { color: var(--color-green-dark); }
+
+    .driver-val {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-red-dark);
+      margin-bottom: 4px;
+    }
+    .driver-card.total .driver-val { color: var(--color-green-dark); }
+
+    .driver-desc {
+      font-size: 11px;
+      color: var(--color-text-ter);
+      line-height: 1.45;
+    }
+
+    /* ============================================================
+       INTERACTIVE CHART SECTION
+    ============================================================ */
+    .chart-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .ctrl-card {
+      background: var(--color-surface);
+      border: 0.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+    }
+
+    .ctrl-card-title {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .ctrl-card-title.blue  { color: var(--color-blue-dark); }
+    .ctrl-card-title.green { color: var(--color-green-dark); }
+    .ctrl-card-fixed-val {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--color-blue-dark);
+    }
+    .ctrl-card-fixed-sub {
+      font-size: 11px;
+      color: var(--color-text-ter);
+      margin-top: 3px;
+    }
+
+    .ctrl-row { margin-bottom: 0.5rem; }
+    .ctrl-row:last-child { margin-bottom: 0; }
+    .ctrl-label {
+      font-size: 11px;
+      color: var(--color-text-sec);
+      margin-bottom: 3px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .ctrl-label strong { color: var(--color-text); font-weight: 500; }
+
+    input[type=range] {
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      appearance: none;
+      background: var(--color-bg-secondary);
+      outline: none;
+      cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--color-green);
+      border: 2px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+
+    /* Wirkungskurven */
+    .kurven-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .kurve-card {
+      background: var(--color-surface);
+      border: 0.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+    }
+
+    .kurve-title {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.625rem;
+    }
+    .kurve-title.green { color: var(--color-green-dark); }
+    .kurve-title.blue  { color: var(--color-blue-dark); }
+
+    .kurve-years {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    .ky {
+      background: var(--color-bg);
+      border-radius: var(--radius-sm);
+      padding: 6px;
+      text-align: center;
+    }
+    .ky-label { font-size: 9px; color: var(--color-text-ter); margin-bottom: 2px; }
+    .ky-val   { font-size: 12px; font-weight: 500; }
+    .ky-rest  { font-size: 10px; color: var(--color-text-ter); margin-top: 1px; }
+
+    /* Chart */
+    .chart-wrapper { position: relative; width: 100%; height: 300px; margin-bottom: 10px; }
+
+    .chart-legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      font-size: 11px;
+      color: var(--color-text-sec);
+    }
+    .leg { display: flex; align-items: center; gap: 6px; }
+
+    /* ============================================================
+       DETAIL TABLE
+    ============================================================ */
+    .tbl-header { margin-bottom: 0.375rem; }
+    .tbl-subtitle {
+      font-size: 12px;
+      color: var(--color-text-ter);
+      margin-bottom: 0.875rem;
+      line-height: 1.55;
+    }
+    .tbl-subtitle strong { color: var(--color-text-sec); font-weight: 500; }
+
+    .tbl-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 0.5px solid var(--color-border);
+      min-width: 660px;
+    }
+    thead tr { background: var(--color-bg-secondary); }
+    th {
+      padding: 8px 12px;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--color-text-ter);
+      text-align: right;
+      border-bottom: 0.5px solid var(--color-border);
+      white-space: nowrap;
+    }
+    th:first-child { text-align: left; }
+    th .th-sub {
+      font-size: 9px;
+      font-weight: 400;
+      display: block;
+      margin-top: 2px;
+      opacity: 0.8;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 0.5px solid var(--color-border);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      vertical-align: top;
+    }
+    td:first-child { text-align: left; font-weight: 500; }
+    .td-sub {
+      font-size: 10px;
+      color: var(--color-text-ter);
+      display: block;
+      margin-top: 2px;
+      font-style: italic;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--color-bg); }
+    .total-row td {
+      font-weight: 500;
+      background: var(--color-bg-secondary);
+      border-top: 1px solid var(--color-border-med) !important;
+    }
+
+    /* ============================================================
+       SUMMARY CARDS
+    ============================================================ */
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .s-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--color-border);
+      padding: 1rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .s-card.best { border: 2px solid var(--color-green); }
+
+    .s-card-label { font-size: 11px; color: var(--color-text-sec); margin-bottom: 3px; }
+    .s-card-total { font-size: 20px; font-weight: 500; }
+    .s-card-sub   { font-size: 11px; color: var(--color-text-ter); margin-top: 3px; line-height: 1.4; }
+    .s-card-badge {
+      font-size: 10px;
+      margin-top: 6px;
+      padding: 2px 10px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    /* ============================================================
+       INSIGHT BOX
+    ============================================================ */
+    .insight {
+      border-left: 3px solid var(--color-green);
+      background: var(--color-green-light);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 1rem 1.25rem;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--color-green-dark);
+      margin-bottom: 2rem;
+    }
+    .insight strong { color: var(--color-green-dark); font-weight: 500; }
+
+    /* ============================================================
+       LESEBEISPIELE
+    ============================================================ */
+    .example-tag {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .example-tag.ex1 { color: var(--color-red-dark); }
+    .example-tag.ex2 { color: var(--color-green-dark); }
+
+    .example-title {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      line-height: 1.4;
+      margin: 0 0 1rem;
+      padding-left: 1rem;
+      font-weight: 400;
+    }
+    .ex1 .example-title { border-left: 3px solid var(--color-red); }
+    .ex2 .example-title { border-left: 3px solid var(--color-green); }
+
+    .impact-row {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 4px 11px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .pill-red   { background: var(--color-red-light);   color: var(--color-red-dark); }
+    .pill-green { background: var(--color-green-light); color: var(--color-green-dark); }
+    .pill-blue  { background: var(--color-blue-light);  color: var(--color-blue-dark); }
+    .pill-amber { background: var(--color-amber-light); color: var(--color-amber-dark); }
+
+    .highlight-red {
+      border-left: 3px solid var(--color-red);
+      background: var(--color-red-light);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 0.875rem 1.25rem;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--color-red-dark);
+      margin-top: 1rem;
+    }
+    .highlight-red strong { font-weight: 500; }
+
+    .highlight-green {
+      border-left: 3px solid var(--color-green);
+      background: var(--color-green-light);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 0.875rem 1.25rem;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--color-green-dark);
+      margin-top: 1rem;
+    }
+    .highlight-green strong { font-weight: 500; }
+
+    /* Outcome table specific */
+    .outcome-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 1rem 0 1.25rem; border-radius: var(--radius-md); overflow: hidden; border: 0.5px solid var(--color-border); }
+    .outcome-table thead tr { background: var(--color-bg-secondary); }
+    .outcome-table th { padding: 9px 12px; font-size: 10px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--color-text-ter); text-align: right; border-bottom: 0.5px solid var(--color-border); }
+    .outcome-table th:first-child { text-align: left; }
+    .outcome-table td { padding: 9px 12px; border-bottom: 0.5px solid var(--color-border); text-align: right; font-variant-numeric: tabular-nums; }
+    .outcome-table td:first-child { text-align: left; }
+    .outcome-table tbody tr:last-child td { border-bottom: none; font-weight: 500; background: var(--color-bg-secondary); }
+    .outcome-table tbody tr:hover { background: var(--color-bg); }
+
+    /* ============================================================
+       FINAL COMPARISON
+    ============================================================ */
+    .comparison {
+      background: var(--color-bg-secondary);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      border: 0.5px solid var(--color-border);
+    }
+    .comp-title { font-family: var(--font-serif); font-size: 20px; margin-bottom: 1.25rem; font-weight: 400; }
+    .comp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .comp-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--color-border);
+      padding: 1.25rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .comp-card.best { border: 2px solid var(--color-green); }
+    .comp-label { font-size: 11px; color: var(--color-text-sec); margin-bottom: 5px; }
+    .comp-val { font-size: 22px; font-weight: 500; }
+    .comp-sub { font-size: 11px; color: var(--color-text-ter); margin-top: 4px; line-height: 1.4; }
+    .comp-badge { font-size: 10px; margin-top: 8px; padding: 3px 12px; border-radius: 20px; display: inline-block; }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 640px) {
+      .page { padding: 2rem 1.25rem 4rem; }
+      .drivers-grid { grid-template-columns: repeat(2, 1fr); }
+      .chart-controls { grid-template-columns: 1fr; }
+      .kurven-panel { grid-template-columns: 1fr; }
+      .summary { grid-template-columns: 1fr; }
+      .comp-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ============================================================
+       EINFÜHRUNG
+  ============================================================ -->
+  <section class="section">
+    <span class="tag">FAQ — Kostenanalyse &amp; HR-Führung</span>
+    <h1 class="page-title">Was kostet es wirklich, wenn strategische HR-Führung fehlt?</h1>
+
+    <p class="lead">
+      Viele Unternehmen mit 50 bis 150 Mitarbeitenden haben keine dedizierte HR-Führung — und halten das für normal. Die Kosten, die dadurch entstehen, erscheinen nie auf einer einzelnen Rechnung. Sie verteilen sich auf Budgetpositionen, die nichts miteinander zu tun zu haben scheinen: eine teure Fehlbesetzung hier, eine hohe Fluktuation dort, ein rechtlicher Konflikt, ein demotiviertes Team. <strong>Diese versteckten Kosten sind real, messbar — und vermeidbar.</strong>
+    </p>
+
+    <p class="lead">
+      Ein <strong>Fractional CHRO</strong> greift genau dort an: Er führt Compliance-Strukturen ein, baut skalierbare Recruiting- und Onboarding-Prozesse auf, entwickelt Führungskräfte und schafft eine HR-Strategie, die mit dem Unternehmen wächst. Die Wirkung ist nicht sofort vollständig sichtbar — aber sie ist kumulativ. Je länger ein Fractional CHRO im Einsatz ist, desto stärker reduzieren sich die versteckten Kosten.
+    </p>
+
+    <!-- Cost drivers grid -->
+    <div class="drivers-grid">
+      <div class="driver-card">
+        <div class="driver-cat">Fluktuation</div>
+        <div class="driver-val">CHF 200–400k</div>
+        <div class="driver-desc">Jede ungewollte Kündigung kostet 50–150% eines Jahresgehalts</div>
+      </div>
+      <div class="driver-card">
+        <div class="driver-cat">Fehlbesetzungen</div>
+        <div class="driver-val">CHF 100–300k</div>
+        <div class="driver-desc">Falsche Person im falschen Job — Produktivitätsverlust &amp; Folgekosten</div>
+      </div>
+      <div class="driver-card">
+        <div class="driver-cat">Compliance &amp; Recht</div>
+        <div class="driver-val">CHF 20–100k</div>
+        <div class="driver-desc">Arbeitsrechtliche Risiken, DSG/DSGVO, Gleichstellung</div>
+      </div>
+      <div class="driver-card">
+        <div class="driver-cat">Produktivität &amp; Kultur</div>
+        <div class="driver-val">CHF 150–300k</div>
+        <div class="driver-desc">Fehlende Führungsentwicklung, schlechtes Onboarding, Demotivation</div>
+      </div>
+      <div class="driver-card">
+        <div class="driver-cat">Mgmt. Ineffizienz</div>
+        <div class="driver-val">CHF 100–250k</div>
+        <div class="driver-desc">Führungskräfte ohne HR-Unterstützung verlieren Zeit &amp; Energie</div>
+      </div>
+      <div class="driver-card">
+        <div class="driver-cat">Wachstum &amp; Skalierung</div>
+        <div class="driver-val">CHF 100–300k</div>
+        <div class="driver-desc">Fehlende Strukturen bremsen Wachstum und kosten Opportunitäten</div>
+      </div>
+      <div class="driver-card">
+        <div class="driver-cat">Employer Branding</div>
+        <div class="driver-val">CHF 50–150k</div>
+        <div class="driver-desc">Schwaches Arbeitgeberimage erhöht Recruiting-Kosten und -Zeit</div>
+      </div>
+      <div class="driver-card total">
+        <div class="driver-cat">Gesamtschaden p.a.</div>
+        <div class="driver-val">CHF 720k–1.8 Mio.</div>
+        <div class="driver-desc">Konservative Schätzung · Bandbreite je nach Unternehmensgrösse</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================================================
+       INTERAKTIVE GRAFIK
+  ============================================================ -->
+  <section class="section">
+    <span class="tag">Interaktiver Rechner</span>
+    <h2 class="section-title">CHRO-Kosten, Nichts-tun &amp; Einsparung — live berechnet</h2>
+
+    <div class="chart-controls">
+      <div class="ctrl-card">
+        <div class="ctrl-card-title blue">Vollzeit-CHRO — fix</div>
+        <div class="ctrl-card-fixed-val">CHF 250k / Jahr</div>
+        <div class="ctrl-card-fixed-sub">–15% weniger Wirkung als Fractional (interne Komplexität)</div>
+      </div>
+      <div class="ctrl-card">
+        <div class="ctrl-card-title green">Fractional CHRO</div>
+        <div class="ctrl-row">
+          <div class="ctrl-label"><span>Kosten Jahr 1</span><strong id="lbl-fstart">100k</strong></div>
+          <input type="range" id="fstart" min="0" max="240" value="100" step="5">
+        </div>
+        <div class="ctrl-row">
+          <div class="ctrl-label"><span>Wachstum pro Jahr</span><strong id="lbl-fgrow">+20%</strong></div>
+          <input type="range" id="fgrow" min="0" max="40" value="20" step="5">
+        </div>
+      </div>
+    </div>
+
+    <!-- Wirkungskurven -->
+    <div class="kurven-panel">
+      <div class="kurve-card">
+        <div class="kurve-title green">Fractional CHRO — Wirkungskurve (auto)</div>
+        <div class="kurve-years" id="frac-kurve"></div>
+      </div>
+      <div class="kurve-card">
+        <div class="kurve-title blue">Vollzeit-CHRO 250k — Wirkungskurve (fix)</div>
+        <div class="kurve-years" id="vz-kurve"></div>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="chart-wrapper"><canvas id="mainChart"></canvas></div>
+
+    <div class="chart-legend">
+      <span class="leg">
+        <svg width="28" height="10"><line x1="0" y1="5" x2="28" y2="5" stroke="#D85A30" stroke-width="2" stroke-dasharray="5,3"/></svg>
+        Kein CHRO — Nichts-tun-Kosten
+      </span>
+      <span class="leg">
+        <svg width="28" height="10"><line x1="0" y1="5" x2="28" y2="5" stroke="#5F5E5A" stroke-width="2" stroke-dasharray="7,4"/></svg>
+        Vollzeit-CHRO 250k fix
+      </span>
+      <span class="leg">
+        <svg width="28" height="10"><line x1="0" y1="5" x2="28" y2="5" stroke="#1D9E75" stroke-width="2.5"/><circle cx="14" cy="5" r="3" fill="#1D9E75"/></svg>
+        Fractional CHRO Honorar
+      </span>
+    </div>
+
+    <!-- Detail table -->
+    <div class="tbl-header">
+      <span class="tag" style="margin-bottom:0.25rem;">Jahresübersicht</span>
+    </div>
+    <p class="tbl-subtitle">
+      <strong>Nichts-tun-Kosten</strong> = verbleibende Schäden nach CHRO-Wirkung.
+      <strong>Fractional Gesamtkosten</strong> = Honorar + Restschäden.
+      <strong>Vollzeit Gesamtkosten</strong> = CHF 250k Gehalt + Restschäden (nach geringerer Wirkung).
+      <strong>Einsparung</strong> = Differenz zur Basis ohne CHRO.
+    </p>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th style="color:#993C1D">Nichts-tun-Kosten<span class="th-sub">Restschäden nach CHRO-Wirkung</span></th>
+            <th style="color:#1D9E75">Fractional Honorar<span class="th-sub">Reiner CHRO-Invest</span></th>
+            <th style="color:#1D9E75">Fractional Gesamt<span class="th-sub">Honorar + Restschäden</span></th>
+            <th style="color:#185FA5">Vollzeit Gesamt<span class="th-sub">250k Gehalt + Restschäden</span></th>
+            <th style="color:#0F6E56">Einsparung Frac.<span class="th-sub">vs. kein CHRO</span></th>
+            <th style="color:#185FA5">Einsparung VZ<span class="th-sub">vs. kein CHRO</span></th>
+          </tr>
+        </thead>
+        <tbody id="tbl-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Summary cards -->
+    <div class="summary">
+      <div class="s-card" id="card-n">
+        <div class="s-card-label">Kein CHRO — 5 Jahre Total</div>
+        <div class="s-card-total" style="color:#993C1D;" id="tot-n">—</div>
+        <div class="s-card-sub">720k/Jahr +8%/Jahr · keine Mitigation</div>
+        <div class="s-card-badge" style="background:#FAECE7;color:#993C1D;">Teuerste Option</div>
+      </div>
+      <div class="s-card" id="card-f">
+        <div class="s-card-label">Fractional CHRO — 5 Jahre Total</div>
+        <div class="s-card-total" style="color:#0F6E56;" id="tot-f">—</div>
+        <div class="s-card-sub" id="sub-f">—</div>
+        <div class="s-card-badge" id="bdg-f" style="background:#E1F5EE;color:#085041;">—</div>
+      </div>
+      <div class="s-card" id="card-ft">
+        <div class="s-card-label">Vollzeit-CHRO — 5 Jahre Total</div>
+        <div class="s-card-total" style="color:#185FA5;" id="tot-ft">—</div>
+        <div class="s-card-sub" id="sub-ft">—</div>
+        <div class="s-card-badge" id="bdg-ft" style="background:#E6F1FB;color:#185FA5;">—</div>
+      </div>
+    </div>
+
+    <div class="insight" id="insight"></div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================================================
+       LESEBEISPIEL 1
+  ============================================================ -->
+  <section class="section ex1">
+    <span class="example-tag ex1">Lesebeispiel 1 — Status quo</span>
+    <h2 class="example-title">Ein Technologie-KMU, 80 Mitarbeitende — ohne HR-Führung</h2>
+
+    <p class="lead">
+      Das Unternehmen wächst seit drei Jahren. Die Geschäftsleitung übernimmt HR-Entscheide nebenbei, unterstützt von einer administrativen HR-Assistenz. Es gibt keine strukturierten Hiring-Prozesse, keine Onboarding-Standards, kein Führungskräfte-Feedback-System. Compliance-Themen werden reaktiv behandelt — wenn etwas schief geht.
+    </p>
+
+    <div class="impact-row">
+      <span class="pill pill-red">Fluktuation 18%/Jahr</span>
+      <span class="pill pill-red">3 Fehlbesetzungen in 2 Jahren</span>
+      <span class="pill pill-red">1 arbeitsrechtlicher Fall pendent</span>
+      <span class="pill pill-amber">Onboarding: informell, inkonsistent</span>
+      <span class="pill pill-amber">Kein Employer-Branding-Konzept</span>
+    </div>
+
+    <p class="lead">
+      Die Folge: <strong>CHF 720k versteckte Kosten im Jahr 1</strong> — verteilt auf sieben Budgetpositionen, die nie gemeinsam betrachtet werden. Ohne Intervention steigen diese Kosten jedes Jahr um ca. +8%. Nach 5 Jahren ohne HR-Führung summieren sich die Schäden auf <strong>über CHF 4.2 Mio.</strong>
+    </p>
+
+    <table class="outcome-table">
+      <thead>
+        <tr>
+          <th>Kostentreiber</th>
+          <th>Jahr 1</th>
+          <th>Jahr 3</th>
+          <th>Jahr 5</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Fluktuation &amp; Fehlbesetzungen</td><td style="color:#993C1D">CHF 243k</td><td style="color:#993C1D">CHF 283k</td><td style="color:#993C1D">CHF 333k</td></tr>
+        <tr><td>Produktivität &amp; Mgmt. Ineffizienz</td><td style="color:#993C1D">CHF 201k</td><td style="color:#993C1D">CHF 234k</td><td style="color:#993C1D">CHF 275k</td></tr>
+        <tr><td>Compliance &amp; Rechtsrisiken</td><td style="color:#993C1D">CHF 35k</td><td style="color:#993C1D">CHF 41k</td><td style="color:#993C1D">CHF 48k</td></tr>
+        <tr><td>Wachstum &amp; Employer Branding</td><td style="color:#993C1D">CHF 241k</td><td style="color:#993C1D">CHF 281k</td><td style="color:#993C1D">CHF 331k</td></tr>
+        <tr><td>Total</td><td style="color:#993C1D">CHF 720k</td><td style="color:#993C1D">CHF 839k</td><td style="color:#993C1D">CHF 987k</td></tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-red">
+      <strong>Das Kernproblem:</strong> Keine dieser Kosten erscheint als Posten "fehlende HR-Führung". Sie verstecken sich in Recruiting-Budgets, Anwaltsrechnungen und steigenden Krankheitstagen. Genau deshalb werden sie so lange toleriert — bis der Schaden zu gross ist, um ignoriert zu werden.
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================================================
+       LESEBEISPIEL 2
+  ============================================================ -->
+  <section class="section ex2">
+    <span class="example-tag ex2">Lesebeispiel 2 — Mit Fractional CHRO</span>
+    <h2 class="example-title">Dasselbe Unternehmen — mit Fractional CHRO ab Jahr 1</h2>
+
+    <p class="lead">
+      Das Unternehmen engagiert einen Fractional CHRO für <strong>2 Tage pro Woche, CHF 100k im ersten Jahr</strong>. Er beginnt mit einer HR-Diagnose, priorisiert die grössten Risiken und setzt erste Quick Wins um. Die Wirkung wächst jedes Jahr — weil Systeme greifen, Prozesse reifen und Kultur sich festigt.
+    </p>
+
+    <div class="impact-row">
+      <span class="pill pill-green">Compliance-Framework (J.1)</span>
+      <span class="pill pill-green">Strukturiertes Onboarding (J.1)</span>
+      <span class="pill pill-green">Hiring-Prozess standardisiert (J.2)</span>
+      <span class="pill pill-green">Fluktuation –40% bis J.3</span>
+      <span class="pill pill-blue">Employer Branding Konzept (J.2)</span>
+      <span class="pill pill-blue">Führungskräfte-Entwicklung (J.3)</span>
+    </div>
+
+    <p class="lead">
+      Im ersten Jahr reduziert der Fractional CHRO die versteckten Kosten um <strong>–20%</strong> — Quick Wins, erste Strukturen, akute Risiken entschärft. Ab Jahr 3 greift das volle Potenzial. Im fünften Jahr beträgt die Kostensenkung <strong>–88%</strong> gegenüber der Basis.
+    </p>
+
+    <table class="outcome-table">
+      <thead>
+        <tr>
+          <th>Szenario</th>
+          <th>Jahr 1</th>
+          <th>Jahr 3</th>
+          <th>Jahr 5</th>
+          <th>Total 5 Jahre</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Kein CHRO — versteckte Kosten</td>
+          <td style="color:#993C1D">CHF 720k</td>
+          <td style="color:#993C1D">CHF 839k</td>
+          <td style="color:#993C1D">CHF 987k</td>
+          <td style="color:#993C1D">CHF 4.22 Mio.</td>
+        </tr>
+        <tr>
+          <td>Fractional CHRO (100k J.1, +20%/J.)</td>
+          <td style="color:#0F6E56">CHF 676k</td>
+          <td style="color:#0F6E56">CHF 396k</td>
+          <td style="color:#0F6E56">CHF 326k</td>
+          <td style="color:#0F6E56">CHF 2.07 Mio.</td>
+        </tr>
+        <tr>
+          <td>Vollzeit-CHRO (250k fix)</td>
+          <td style="color:#185FA5">CHF 847k</td>
+          <td style="color:#185FA5">CHF 586k</td>
+          <td style="color:#185FA5">CHF 494k</td>
+          <td style="color:#185FA5">CHF 3.13 Mio.</td>
+        </tr>
+        <tr>
+          <td>Einsparung Fractional vs. kein CHRO</td>
+          <td style="color:#0F6E56">+CHF 44k</td>
+          <td style="color:#0F6E56">+CHF 443k</td>
+          <td style="color:#0F6E56">+CHF 661k</td>
+          <td style="color:#0F6E56">+CHF 2.15 Mio.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-green">
+      <strong>Die entscheidende Erkenntnis:</strong> Der Fractional CHRO kostet im ersten Jahr mehr als er einspart — <strong>das ist normal und einkalkuliert.</strong> Er schafft im ersten Jahr Strukturen, die in den Folgejahren exponentiell wirken. Ab Jahr 2 übersteigt die Einsparung die Investition deutlich. Über 5 Jahre: Netto-Einsparung <strong>CHF 2.15 Mio.</strong> bei einem Gesamtinvest von CHF 744k.
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============================================================
+       DIREKTVERGLEICH
+  ============================================================ -->
+  <section class="section">
+    <div class="comparison">
+      <p class="comp-title">Direktvergleich — 5 Jahre, 80 Mitarbeitende</p>
+      <div class="comp-grid">
+        <div class="comp-card">
+          <div class="comp-label">Kein CHRO</div>
+          <div class="comp-val" style="color:#993C1D">CHF 4.22 Mio.</div>
+          <div class="comp-sub">Versteckte Kosten kumuliert</div>
+          <div class="comp-badge" style="background:#FAECE7;color:#993C1D;">Teuerste Option</div>
+        </div>
+        <div class="comp-card best">
+          <div class="comp-label" style="color:#085041;font-weight:500">Fractional CHRO</div>
+          <div class="comp-val" style="color:#0F6E56">CHF 2.07 Mio.</div>
+          <div class="comp-sub">Invest CHF 744k · Einsparung CHF 2.15 Mio.</div>
+          <div class="comp-badge" style="background:#E1F5EE;color:#085041;">Beste Option</div>
+        </div>
+        <div class="comp-card">
+          <div class="comp-label">Vollzeit-CHRO</div>
+          <div class="comp-val" style="color:#185FA5">CHF 3.13 Mio.</div>
+          <div class="comp-sub">Gehalt CHF 1.25 Mio. · geringere Wirkung</div>
+          <div class="comp-badge" style="background:#E6F1FB;color:#185FA5;">Ab ~250 MA sinnvoll</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT — Interaktiver Rechner
+============================================================ -->
+<script>
+  let chart;
+  const YEARS=5, BASE_N=720, N_GROW=0.08, FT=250;
+  const LABELS=['Jahr 1','Jahr 2','Jahr 3','Jahr 4','Jahr 5'];
+
+  // Wirkungskurven (kalibriert, realistisch gestaffelt)
+  // Fractional bei 100k: J1–20%, J2–50%, J3–70%, J4–80%, J5–88%
+  // Vollzeit bei 250k: –15% weniger Wirkung wegen interner Komplexität
+  const FRAC_100 = [0.20, 0.50, 0.70, 0.80, 0.88];
+  const VZ_CURVE = [0.17, 0.43, 0.60, 0.68, 0.75];
+
+  // Skalierung für andere Fractional-Investments
+  function fracScale(c) {
+    if (c <= 0)   return 0;
+    if (c <= 100) return c / 100;
+    return 1.0 + (c - 100) / 140 * 0.40;
+  }
+
+  function fracRed(c, y) {
+    return Math.min(0.95, FRAC_100[y-1] * fracScale(c));
+  }
+
+  function vzRed(y) { return VZ_CURVE[y-1]; }
+
+  function restFrac(c, y) {
+    return Math.round(BASE_N * Math.pow(1+N_GROW, y-1) * (1 - fracRed(c, y)));
+  }
+
+  function restVZ(y) {
+    return Math.round(BASE_N * Math.pow(1+N_GROW, y-1) * (1 - vzRed(y)));
+  }
+
+  function basis(y) { return Math.round(BASE_N * Math.pow(1+N_GROW, y-1)); }
+
+  function f(n) {
+    const r = Math.round(n);
+    if (Math.abs(r) >= 1000) return 'CHF ' + (r/1000).toFixed(2).replace('.',',') + ' Mio.';
+    return 'CHF ' + r.toLocaleString('de-CH') + 'k';
+  }
+  function fs(n) {
+    const r = Math.round(n);
+    const s = r >= 0 ? '+' : '';
+    if (Math.abs(r) >= 1000) return s + 'CHF ' + (Math.abs(r)/1000).toFixed(2).replace('.',',') + ' Mio.';
+    return s + 'CHF ' + Math.abs(r).toLocaleString('de-CH') + 'k';
+  }
+
+  function compute() {
+    const fstart = +document.getElementById('fstart').value;
+    const fgrow  = +document.getElementById('fgrow').value / 100;
+
+    document.getElementById('lbl-fstart').textContent = fstart + 'k';
+    document.getElementById('lbl-fgrow').textContent  = '+' + Math.round(fgrow*100) + '%';
+
+    // Wirkungskurven-Panel
+    let fracH = '', vzH = '';
+    for (let y=1; y<=YEARS; y++) {
+      fracH += `<div class="ky">
+        <div class="ky-label">Jahr ${y}</div>
+        <div class="ky-val" style="color:#085041">–${Math.round(fracRed(fstart,y)*100)}%</div>
+        <div class="ky-rest">${f(restFrac(fstart,y))}</div>
+      </div>`;
+      vzH += `<div class="ky">
+        <div class="ky-label">Jahr ${y}</div>
+        <div class="ky-val" style="color:#185FA5">–${Math.round(vzRed(y)*100)}%</div>
+        <div class="ky-rest">${f(restVZ(y))}</div>
+      </div>`;
+    }
+    document.getElementById('frac-kurve').innerHTML = fracH;
+    document.getElementById('vz-kurve').innerHTML   = vzH;
+
+    const dNoHR=[], dFT=[], dFrac=[];
+    let totBase=0, totFracSum=0, totFTSum=0;
+    let totFracFee=0, totFracHid=0, totVZHid=0;
+    const rows=[];
+
+    for (let y=1; y<=YEARS; y++) {
+      const b       = basis(y);
+      const fracHid = restFrac(fstart, y);
+      const vzHid   = restVZ(y);
+      const fee     = Math.round(fstart * Math.pow(1+fgrow, y-1));
+      const fracTot = fee + fracHid;
+      const vzTot   = FT + vzHid;
+
+      dNoHR.push(fracHid); dFrac.push(fee); dFT.push(FT);
+      totBase+=b; totFracSum+=fracTot; totFTSum+=vzTot;
+      totFracFee+=fee; totFracHid+=fracHid; totVZHid+=vzHid;
+      rows.push({ y, b, fracHid, fee, fracTot, vzHid, vzTot,
+        frPct: Math.round(fracRed(fstart,y)*100),
+        vzPct: Math.round(vzRed(y)*100),
+        savFrac: b-fracTot, savVZ: b-vzTot });
+    }
+
+    const savFracTotal = totBase - totFracSum;
+    const savVZTotal   = totBase - totFTSum;
+    const fracVsFT     = totFTSum - totFracSum;
+
+    // Chart
+    if (chart) { chart.destroy(); chart=null; }
+    chart = new Chart(document.getElementById('mainChart'), {
+      type:'line',
+      data:{ labels:LABELS, datasets:[
+        { label:'Kein CHRO — Nichts-tun-Kosten', data:dNoHR, borderColor:'#D85A30', borderWidth:2, borderDash:[6,4], pointBackgroundColor:'#D85A30', pointBorderColor:'#fff', pointBorderWidth:2, pointRadius:4, tension:0.3, fill:false },
+        { label:'Vollzeit-CHRO 250k', data:dFT, borderColor:'#5F5E5A', borderWidth:2, borderDash:[8,5], pointBackgroundColor:'#5F5E5A', pointBorderColor:'#fff', pointBorderWidth:2, pointRadius:4, tension:0, fill:false },
+        { label:'Fractional CHRO Honorar', data:dFrac, borderColor:'#1D9E75', borderWidth:2.5, pointBackgroundColor:'#1D9E75', pointBorderColor:'#fff', pointBorderWidth:2, pointRadius:5, tension:0.3, backgroundColor:'rgba(29,158,117,0.07)', fill:true }
+      ]},
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:'index', intersect:false },
+        plugins:{ legend:{display:false},
+          tooltip:{ backgroundColor:'rgba(255,255,255,0.96)', titleColor:'#2C2C2A', bodyColor:'#5F5E5A', borderColor:'rgba(44,44,42,0.15)', borderWidth:1, padding:10,
+            callbacks:{ label: ctx=>'  '+ctx.dataset.label+': '+f(ctx.parsed.y) }
+          }
+        },
+        scales:{
+          x:{ grid:{display:false}, border:{color:'rgba(44,44,42,0.12)',width:0.5}, ticks:{font:{size:11},color:'#888780'} },
+          y:{ beginAtZero:true, grid:{color:'rgba(136,135,128,0.1)'}, border:{display:false},
+              ticks:{ callback:v=>f(v), font:{size:11}, color:'#888780', maxTicksLimit:7 } }
+        }
+      }
+    });
+
+    // Table
+    const cN='color:#993C1D', cF='color:#1D9E75', cFT='color:#185FA5', cG='color:#0F6E56';
+    document.getElementById('tbl-body').innerHTML =
+      rows.map(r=>`<tr>
+        <td>Jahr ${r.y}</td>
+        <td style="${cN}">${f(r.fracHid)}<span class="td-sub">–${r.frPct}% von ${f(r.b)} Basis</span></td>
+        <td style="${cF}">${f(r.fee)}</td>
+        <td style="${cF};font-weight:500">${f(r.fracTot)}<span class="td-sub">${f(r.fee)} + ${f(r.fracHid)}</span></td>
+        <td style="${cFT};font-weight:500">${f(r.vzTot)}<span class="td-sub">CHF 250k + ${f(r.vzHid)} (–${r.vzPct}%)</span></td>
+        <td style="${r.savFrac>=0?cG:cN}">${fs(r.savFrac)}<span class="td-sub">${f(r.b)} – ${f(r.fracTot)}</span></td>
+        <td style="${r.savVZ>=0?cFT:cN}">${fs(r.savVZ)}<span class="td-sub">${f(r.b)} – ${f(r.vzTot)}</span></td>
+      </tr>`).join('') +
+      `<tr class="total-row">
+        <td>Total 5 Jahre</td>
+        <td style="${cN}">${f(totFracHid)}</td>
+        <td style="${cF}">${f(totFracFee)}</td>
+        <td style="${cF}">${f(totFracSum)}</td>
+        <td style="${cFT}">${f(totFTSum)}</td>
+        <td style="${cG};font-weight:500">${fs(savFracTotal)}</td>
+        <td style="${cFT};font-weight:500">${fs(savVZTotal)}</td>
+      </tr>`;
+
+    // Cards
+    document.getElementById('tot-n').textContent  = f(totBase);
+    document.getElementById('tot-f').textContent  = f(totFracSum);
+    document.getElementById('sub-f').textContent  = `Honorar ${f(totFracFee)} + Restschäden ${f(totFracHid)}`;
+    document.getElementById('bdg-f').textContent  = `Einsparung ${f(savFracTotal)} vs. kein CHRO`;
+    document.getElementById('tot-ft').textContent = f(totFTSum);
+    document.getElementById('sub-ft').textContent = `CHF 1'250k Gehalt + Restschäden ${f(totVZHid)}`;
+    document.getElementById('bdg-ft').textContent = fracVsFT>0 ? `+${f(fracVsFT)} teurer als Fractional` : `${f(Math.abs(fracVsFT))} günstiger`;
+
+    ['card-n','card-f','card-ft'].forEach(id=>document.getElementById(id).classList.remove('best'));
+    if (totFracSum<=totFTSum) document.getElementById('card-f').classList.add('best');
+    else document.getElementById('card-ft').classList.add('best');
+
+    document.getElementById('insight').innerHTML =
+      `Ohne HR-Führung: <strong>${f(totBase)}</strong> über 5 Jahre. ` +
+      (fstart>0
+        ? `Fractional CHRO (${f(fstart)}/Jahr): Wirkung wächst von –${rows[0].frPct}% (J.1) auf –${rows[4].frPct}% (J.5) → Gesamtkosten <strong>${f(totFracSum)}</strong>, Einsparung <strong>${f(savFracTotal)}</strong>. `
+        : `Kein Fractional CHRO eingesetzt. `) +
+      `Vollzeit-CHRO (250k fix): <strong>${f(totFTSum)}</strong>, Einsparung ${f(savVZTotal)} — Fractional ist <strong>${f(Math.abs(fracVsFT))} ${fracVsFT>0?'günstiger':'teurer'}</strong>.`;
+  }
+
+  document.querySelectorAll('input[type=range]').forEach(el=>el.addEventListener('input', compute));
+  compute();
+</script>
+</body>
+</html>
