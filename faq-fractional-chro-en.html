@@ -12,6 +12,12 @@
     <link rel="alternate" hreflang="x-default" href="https://www.fractional-chro.ch/faq-fractional-chro-de.html">
     <script defer src="/_vercel/insights/script.js"></script>
     <style>
+        :root {
+            --color-background-secondary: #f3f7fd;
+            --color-text-secondary: #566176;
+            --border-radius-md: 10px;
+            --color-border-tertiary: #d9e0ea;
+        }
         body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #f7f9fc; color: #1b2330; line-height: 1.7; }
         main { max-width: 860px; margin: 0 auto; padding: 42px 20px 56px; }
         .card { background: #fff; border: 1px solid #d9e0ea; border-radius: 12px; padding: 28px; }
@@ -20,10 +26,51 @@
         .lang-switch { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 14px; color: #566176; font-size: 0.95rem; }
         .lang-switch a { color: #566176; text-decoration: none; }
         .lang-switch .active { color: #1b2330; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
-        .faq-table-wrap { overflow-x: auto; margin: 10px 0 14px; }
-        .faq-table { width: 100%; min-width: 640px; border-collapse: collapse; font-size: 0.94rem; }
-        .faq-table th, .faq-table td { border: 1px solid #d9e0ea; padding: 8px 10px; text-align: left; vertical-align: top; }
-        .faq-table th { background: #f0f4fb; }
+        .faq-calc * { box-sizing: border-box; }
+        .faq-calc .wrap { font-family: 'DM Sans', Arial, Helvetica, sans-serif; max-width: 720px; margin: 0 auto; padding: 1.5rem 0 2.5rem; color: #1b2330; }
+        .faq-calc .tag { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #566176; margin-bottom: 0.5rem; }
+        .faq-calc .main-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 20px; margin: 0 0 0.25rem; }
+        .faq-calc .sub { font-size: 13px; color: #566176; margin: 0 0 1.5rem; line-height: 1.6; }
+        .faq-calc .zeit-row { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; }
+        .faq-calc .zeit-label { font-size: 12px; color: #566176; white-space: nowrap; }
+        .faq-calc .zeit-val { font-size: 14px; font-weight: 500; min-width: 48px; text-align: right; }
+        .faq-calc .panels { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+        .faq-calc .panel { border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); padding: 0.875rem; }
+        .faq-calc .panel-title { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
+        .faq-calc .panel.p-red .panel-title { color: #993c1d; }
+        .faq-calc .panel.p-green .panel-title { color: #085041; }
+        .faq-calc .panel.p-blue .panel-title { color: #185fa5; }
+        .faq-calc .ctrl { margin-bottom: 0.625rem; }
+        .faq-calc .ctrl:last-child { margin-bottom: 0; }
+        .faq-calc .ctrl-label { font-size: 11px; color: #566176; margin-bottom: 2px; display: flex; justify-content: space-between; }
+        .faq-calc .ctrl-label .val { font-weight: 500; color: #1b2330; }
+        .faq-calc .nichts-badge { display: flex; align-items: center; justify-content: space-between; background: #faece7; border-radius: var(--border-radius-md); padding: 5px 10px; margin-bottom: 8px; }
+        .faq-calc .nichts-badge span { font-size: 11px; color: #712b13; }
+        .faq-calc .nichts-badge strong { font-size: 13px; color: #712b13; }
+        .faq-calc .auto-note { font-size: 11px; color: #566176; background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 5px 10px; margin-top: 8px; line-height: 1.5; }
+        .faq-calc .auto-note strong { color: #1b2330; }
+        .faq-calc .chart-wrap { position: relative; width: 100%; height: 300px; margin-bottom: 8px; }
+        .faq-calc .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 1.75rem; font-size: 11px; color: #566176; }
+        .faq-calc .leg-item { display: flex; align-items: center; gap: 5px; }
+        .faq-calc .leg-bar { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+        .faq-calc .leg-line { width: 26px; height: 3px; flex-shrink: 0; position: relative; }
+        .faq-calc .leg-dot { width: 7px; height: 7px; border-radius: 50%; position: absolute; top: -2px; left: 50%; transform: translateX(-50%); border: 2px solid #fff; }
+        .faq-calc .divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 0 0 1.5rem; }
+        .faq-calc .saldo-title { font-size: 12px; font-weight: 500; color: #566176; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1rem; }
+        .faq-calc .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.25rem; }
+        .faq-calc .s-card { border-radius: var(--border-radius-md); padding: 0.875rem; border: 0.5px solid var(--color-border-tertiary); }
+        .faq-calc .s-card.best { border: 2px solid #1d9e75; }
+        .faq-calc .s-card-label { font-size: 11px; color: #566176; margin-bottom: 2px; }
+        .faq-calc .s-card-total { font-size: 20px; font-weight: 500; }
+        .faq-calc .s-card-sub { font-size: 11px; color: #566176; margin-top: 3px; line-height: 1.5; }
+        .faq-calc .s-card-badge { font-size: 10px; margin-top: 6px; padding: 2px 8px; border-radius: 20px; display: inline-block; }
+        .faq-calc .insight { border-left: 3px solid #1d9e75; background: var(--color-background-secondary); border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; padding: 0.875rem 1.25rem; font-size: 13px; line-height: 1.7; color: #566176; }
+        .faq-calc .insight strong { color: #1b2330; font-weight: 500; }
+        @media (max-width: 760px) {
+            .faq-calc .panels, .faq-calc .summary { grid-template-columns: 1fr; }
+            .faq-calc .zeit-row { flex-wrap: wrap; }
+            .faq-calc .zeit-label { min-width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -45,66 +92,126 @@
             <h2>Does a Fractional CHRO relieve the CEO?</h2>
             <p>Yes. Strategic people leadership is represented at C-level, while the CEO is relieved in key HR-related decision areas.</p>
 
-            <h2>What does it really cost if we do not have dedicated HR leadership - and is a Fractional CHRO worth it in comparison?</h2>
-            <p>The most common assumption is: no CHRO = no costs. That is not true. Without HR leadership, hidden costs emerge across different budget lines and are therefore rarely visible as one total picture - until the damage has already occurred. The table below shows a typical 3-year comparison for a company with 50-250 employees.</p>
-            <div class="faq-table-wrap">
-                <table class="faq-table">
-                    <thead>
-                        <tr>
-                            <th>Cost Type</th>
-                            <th>Category</th>
-                            <th>Do Nothing</th>
-                            <th>Fractional CHRO</th>
-                            <th>Full-Time CHRO</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>CHRO personnel costs</td>
-                            <td>Direct</td>
-                            <td>-</td>
-                            <td>80-120k CHF</td>
-                            <td>250-320k CHF</td>
-                        </tr>
-                        <tr>
-                            <td>Mis-hiring &amp; turnover</td>
-                            <td>Hidden</td>
-                            <td>80-200k CHF</td>
-                            <td>20-50k CHF</td>
-                            <td>15-40k CHF</td>
-                        </tr>
-                        <tr>
-                            <td>Productivity loss / culture</td>
-                            <td>Hidden</td>
-                            <td>40-100k CHF</td>
-                            <td>10-35k CHF</td>
-                            <td>5-15k CHF</td>
-                        </tr>
-                        <tr>
-                            <td>Compliance &amp; legal risks</td>
-                            <td>Hidden</td>
-                            <td>20-80k CHF</td>
-                            <td>5-10k CHF</td>
-                            <td>2-8k CHF</td>
-                        </tr>
-                        <tr>
-                            <td>Recruiting without strategy</td>
-                            <td>Hidden</td>
-                            <td>30-90k CHF</td>
-                            <td>10-20k CHF</td>
-                            <td>8-15k CHF</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Estimated total cost / 3 years</strong></td>
-                            <td></td>
-                            <td><strong>170-470k CHF</strong></td>
-                            <td><strong>105-225k CHF</strong></td>
-                            <td><strong>280-400k CHF</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <h2>What does it cost when there is no HR leadership — and how does that change with a CHRO?</h2>
+            <h3>Introduction</h3>
+            <p>Many companies underestimate the costs that arise when no one leads the HR function strategically. These costs do not appear on a single invoice — they are spread invisibly across budgets, departments, and quarters. We call them "costs of doing nothing".</p>
+
+            <h3>The three cost drivers without HR leadership</h3>
+            <p><strong>1. Turnover &amp; mis-hiring</strong><br>Without structured recruiting processes, clear role profiles, and targeted retention, turnover increases. In practice, each mis-hire costs around 50-150% of annual salary: recruiting costs, onboarding time, productivity loss during vacancy periods — plus cultural damage that is harder to measure.</p>
+            <p><strong>2. Compliance &amp; legal risk</strong><br>Labor law, data protection (FADP/GDPR), equal treatment, termination protection — without someone actively managing these topics, risks accumulate. A single labor-law case can quickly reach five- to six-figure costs.</p>
+            <p><strong>3. Productivity &amp; culture</strong><br>Unclear onboarding, missing leadership development, and weak feedback culture measurably reduce employee performance. What is harder to express in Swiss francs is still real: teams without HR guidance lose direction.</p>
+
+            <h3>Reading example — what a CHRO changes in practice</h3>
+            <p>Starting point: A company with 80 employees has no dedicated HR leadership. Estimated costs of doing nothing are 260k CHF per year — split across turnover (114k), productivity loss (65k), compliance risks (42k), and unstructured recruiting (39k).</p>
+            <p>With a Fractional CHRO (100k CHF/year):<br>The CHRO introduces structured hiring processes in year one, establishes a compliance framework, and starts targeted retention initiatives. Result: costs of doing nothing drop by around -70% in year one to approximately 78k CHF. Over the following years, this effect strengthens because systems, training, and processes have cumulative impact. After five years, costs of doing nothing are reduced to a fraction of the original level.</p>
+            <p>Total cost comparison over 5 years:<br>No CHRO costs around 1,100k CHF in consequential costs. With a Fractional CHRO (100k/year, +20%/year), total costs are about 530k CHF — savings of more than 570k CHF. A Full-Time CHRO (250k/year) can achieve a similar effect on consequential costs, but total cost is significantly higher — savings versus the Fractional model amount to around 800k CHF over five years.</p>
+
+            <div class="faq-calc">
+              <div class="wrap">
+                <div class="tag">Interactive Calculator · Baseline 260k CHF</div>
+                <p class="main-title">CHRO Costs, Cost of Doing Nothing &amp; Savings Area</p>
+                <p class="sub">Calibrated: 100k CHRO → cost of doing nothing decreases by <strong>-70%</strong> (260k → ~78k). The more you invest, the stronger the reduction — sliders update live.</p>
+
+                <div class="zeit-row">
+                  <span class="zeit-label">Time horizon</span>
+                  <input type="range" id="years" min="1" max="10" value="5" step="1" style="flex:1;">
+                  <span class="zeit-val" id="years-val">5 years</span>
+                </div>
+
+                <div class="panels">
+                  <div class="panel p-red">
+                    <div class="panel-title">Do nothing — automatic</div>
+                    <div class="nichts-badge">
+                      <span>Baseline (no CHRO) → after CHRO:</span>
+                      <strong id="nichts-j1">260k CHF</strong>
+                    </div>
+                    <div class="ctrl">
+                      <div class="ctrl-label"><span>Turnover (Y1)</span><span class="val" id="lbl-fluk">114k</span></div>
+                      <input type="range" id="sl-fluk" min="0" max="300" value="114" step="1" disabled style="opacity:0.55;">
+                    </div>
+                    <div class="ctrl">
+                      <div class="ctrl-label"><span>Productivity (Y1)</span><span class="val" id="lbl-prod">65k</span></div>
+                      <input type="range" id="sl-prod" min="0" max="200" value="65" step="1" disabled style="opacity:0.55;">
+                    </div>
+                    <div class="ctrl">
+                      <div class="ctrl-label"><span>Compliance (Y1)</span><span class="val" id="lbl-comp">42k</span></div>
+                      <input type="range" id="sl-comp" min="0" max="150" value="42" step="1" disabled style="opacity:0.55;">
+                    </div>
+                    <div class="ctrl">
+                      <div class="ctrl-label"><span>Recruiting (Y1)</span><span class="val" id="lbl-recr">39k</span></div>
+                      <input type="range" id="sl-recr" min="0" max="150" value="39" step="1" disabled style="opacity:0.55;">
+                    </div>
+                    <div class="ctrl">
+                      <div class="ctrl-label"><span>Organizational reduction/year</span><span class="val" id="lbl-nred">-15k</span></div>
+                      <input type="range" id="nred" min="0" max="40" value="15" step="5">
+                    </div>
+                    <div class="auto-note" id="nichts-note">—</div>
+                  </div>
+
+                  <div class="panel p-green">
+                    <div class="panel-title">Fractional CHRO</div>
+                    <div class="ctrl">
+                      <div class="ctrl-label"><span>Cost year 1</span><span class="val" id="lbl-fstart">100k</span></div>
+                      <input type="range" id="fstart" min="0" max="250" value="100" step="5">
+                    </div>
+                    <div class="ctrl">
+                      <div class="ctrl-label"><span>Growth/year</span><span class="val" id="lbl-fgrow">+20%</span></div>
+                      <input type="range" id="fgrow" min="0" max="50" value="20" step="5">
+                    </div>
+                    <div class="auto-note" id="frac-note">—</div>
+                  </div>
+
+                  <div class="panel p-blue">
+                    <div class="panel-title">Full-Time CHRO</div>
+                    <div class="ctrl">
+                      <div class="ctrl-label"><span>Annual salary</span><span class="val" id="lbl-ftsal">250k</span></div>
+                      <input type="range" id="ftsal" min="0" max="300" value="250" step="10">
+                    </div>
+                    <div class="ctrl">
+                      <div class="ctrl-label"><span>Salary increase/year</span><span class="val" id="lbl-ftgrow">+0%</span></div>
+                      <input type="range" id="ftgrow" min="0" max="10" value="0" step="1">
+                    </div>
+                    <div class="auto-note" id="ft-note">—</div>
+                  </div>
+                </div>
+
+                <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
+
+                <div class="legend">
+                  <span class="leg-item"><span class="leg-bar" style="background:rgba(216,90,48,0.2);border:1.5px solid #D85A30;"></span>Do nothing (auto, live)</span>
+                  <span class="leg-item"><span class="leg-line" style="background:#1D9E75;"><span class="leg-dot" style="background:#1D9E75;"></span></span>Fractional CHRO costs</span>
+                  <span class="leg-item"><span class="leg-line" style="background:#378ADD;"><span class="leg-dot" style="background:#378ADD;"></span></span>Full-Time CHRO costs</span>
+                  <span class="leg-item"><span class="leg-bar" style="background:rgba(29,158,117,0.2);border:1px solid #1D9E75;"></span>Savings Fractional vs Full-Time</span>
+                </div>
+
+                <div class="divider"></div>
+                <div class="saldo-title">Total costs — the better the investment, the lower the total</div>
+                <div class="summary">
+                  <div class="s-card" id="card-nichts">
+                    <div class="s-card-label">No CHRO</div>
+                    <div class="s-card-total" style="color:#993C1D;" id="tot-nichts">—</div>
+                    <div class="s-card-sub">Full consequential costs · no investment</div>
+                    <div class="s-card-badge" style="background:#FAECE7;color:#993C1D;">Most expensive option</div>
+                  </div>
+                  <div class="s-card best" id="card-frac">
+                    <div class="s-card-label">Fractional CHRO</div>
+                    <div class="s-card-total" style="color:#0F6E56;" id="tot-frac">—</div>
+                    <div class="s-card-sub" id="sub-frac">—</div>
+                    <div class="s-card-badge" style="background:#E1F5EE;color:#085041;" id="bdg-frac">—</div>
+                  </div>
+                  <div class="s-card" id="card-ft">
+                    <div class="s-card-label">Full-Time CHRO</div>
+                    <div class="s-card-total" style="color:#185FA5;" id="tot-ft">—</div>
+                    <div class="s-card-sub" id="sub-ft">—</div>
+                    <div class="s-card-badge" style="background:#E6F1FB;color:#185FA5;" id="bdg-ft">—</div>
+                  </div>
+                </div>
+                <div class="insight" id="insight"></div>
+              </div>
             </div>
-            <p><strong>Conclusion:</strong> "Do nothing" is, in most cases, the most expensive option - not because one single invoice appears, but because the costs remain invisible. A Fractional CHRO offers the best entry point: full HR competence, flexibly scalable, without the fixed-cost risk of a full-time role. Moving to a full-time CHRO only pays off once size and complexity truly require it - in practice typically from around 250-300 employees, and even then many companies still do not have a dedicated CHRO.</p>
+
+            <h3>Conclusion</h3>
+            <p>A CHRO pays off not despite its cost, but because of its impact. The Fractional CHRO is the most efficient model: full strategic impact without the fixed-cost risk of a full-time role. The "cost of doing nothing" does not decrease by itself — it requires someone to intervene actively.</p>
 
             <h2>Where can I get further advisory support?</h2>
             <p>
@@ -115,5 +222,131 @@
             <p><a href="./index-en.html">Back to Homepage</a></p>
         </div>
     </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script>
+let chart;
+
+const BASE = 260;
+const RATIOS = [0.438, 0.250, 0.162, 0.150];
+const K = 0.70 / (100 * (1 - 0.70));
+
+function getReduction(chroK) {
+  return Math.min(0.92, 1 - 1 / (1 + K * chroK));
+}
+
+function getLearningBonus(year, chroK) {
+  const scale = Math.min(1, chroK / 150);
+  return Math.min(0.20, (year - 1) * 0.03 * scale);
+}
+
+function compute() {
+  const years = +document.getElementById('years').value;
+  const fstart = +document.getElementById('fstart').value;
+  const fgrow = +document.getElementById('fgrow').value / 100;
+  const ftsal = +document.getElementById('ftsal').value;
+  const ftgrow = +document.getElementById('ftgrow').value / 100;
+  const nred = +document.getElementById('nred').value;
+
+  const chroRef = Math.max(fstart, ftsal);
+  const redJ1 = getReduction(chroRef);
+  const nJ1 = Math.round(BASE * (1 - redJ1));
+
+  const slIds = ['sl-fluk', 'sl-prod', 'sl-comp', 'sl-recr'];
+  const lblIds = ['lbl-fluk', 'lbl-prod', 'lbl-comp', 'lbl-recr'];
+  RATIOS.forEach((r, i) => {
+    const v = Math.round(nJ1 * r);
+    document.getElementById(slIds[i]).value = v;
+    document.getElementById(lblIds[i]).textContent = v + 'k';
+  });
+
+  document.getElementById('years-val').textContent = years + (years === 1 ? ' year' : ' years');
+  document.getElementById('lbl-fstart').textContent = fstart + 'k';
+  document.getElementById('lbl-fgrow').textContent = '+' + Math.round(fgrow * 100) + '%';
+  document.getElementById('lbl-ftsal').textContent = ftsal + 'k';
+  document.getElementById('lbl-ftgrow').textContent = '+' + Math.round(ftgrow * 100) + '%';
+  document.getElementById('lbl-nred').textContent = '-' + nred + 'k';
+  document.getElementById('nichts-j1').textContent = nJ1 + 'k CHF';
+  document.getElementById('nichts-note').innerHTML = `Baseline 260k → <strong>${nJ1}k CHF</strong> (-${Math.round(redJ1 * 100)}% through CHRO investment)`;
+  document.getElementById('frac-note').innerHTML = `100k CHRO → cost of doing nothing -70% · more investment → stronger impact`;
+  document.getElementById('ft-note').innerHTML = `Same impact · cost of doing nothing -${Math.round(redJ1 * 100)}% · higher cost`;
+
+  const labels = [], dNichts = [], dFrac = [], dFt = [];
+  let totN = 0, totFrac = 0, totFt = 0, totFC = 0, totFTC = 0;
+
+  for (let y = 1; y <= years; y++) {
+    labels.push('Year ' + y);
+    const bonus = getLearningBonus(y, chroRef);
+    const totRed = Math.min(0.92, redJ1 + bonus);
+    const nRaw = Math.max(0, BASE - nred * (y - 1));
+    const nRed = Math.round(nRaw * (1 - totRed));
+    const fCHRO = Math.round(fstart * Math.pow(1 + fgrow, y - 1));
+    const ftCHRO = Math.round(ftsal * Math.pow(1 + ftgrow, y - 1));
+
+    dNichts.push(nRed);
+    dFrac.push(fCHRO);
+    dFt.push(ftCHRO);
+
+    totN += nRaw;
+    totFrac += fCHRO + nRed;
+    totFt += ftCHRO + nRed;
+    totFC += fCHRO;
+    totFTC += ftCHRO;
+  }
+
+  const eF = totN - totFrac;
+  const eFT = totN - totFt;
+  const eFvsFT = totFt - totFrac;
+
+  if (chart) chart.destroy();
+  chart = new Chart(document.getElementById('mainChart'), {
+    data: {
+      labels,
+      datasets: [
+        { type: 'line', label: '_ft', data: dFt, borderColor: 'transparent', pointRadius: 0, fill: false, order: 0 },
+        { type: 'line', label: '_frac', data: dFrac, borderColor: 'transparent', backgroundColor: 'rgba(29,158,117,0.18)', pointRadius: 0, fill: '-1', order: 0 },
+        { type: 'bar', label: 'Do nothing (auto)', data: dNichts, backgroundColor: 'rgba(216,90,48,0.2)', borderColor: '#D85A30', borderWidth: 1.5, borderRadius: 3, order: 4 },
+        { type: 'line', label: 'Fractional CHRO', data: dFrac, borderColor: '#1D9E75', borderWidth: 2.5, pointBackgroundColor: '#1D9E75', pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 5, tension: 0.3, fill: false, order: 1 },
+        { type: 'line', label: 'Full-Time CHRO', data: dFt, borderColor: '#378ADD', borderWidth: 2.5, borderDash: [6, 4], pointBackgroundColor: '#378ADD', pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 5, tension: 0.3, fill: false, order: 2 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          filter: i => !i.dataset.label.startsWith('_'),
+          callbacks: { label: c => ' ' + c.dataset.label + ': ' + Math.round(c.parsed.y) + 'k CHF' }
+        }
+      },
+      scales: {
+        x: { ticks: { font: { size: 11 }, color: '#888780' }, grid: { display: false } },
+        y: { beginAtZero: true, ticks: { callback: v => v + 'k', font: { size: 11 }, color: '#888780' }, grid: { color: 'rgba(136,135,128,0.1)' } }
+      }
+    }
+  });
+
+  document.getElementById('tot-nichts').textContent = Math.round(totN) + 'k CHF';
+  document.getElementById('tot-frac').textContent = Math.round(totFrac) + 'k CHF';
+  document.getElementById('tot-ft').textContent = Math.round(totFt) + 'k CHF';
+  document.getElementById('sub-frac').textContent = `CHRO ${Math.round(totFC)}k + reduced consequential costs`;
+  document.getElementById('sub-ft').textContent = `CHRO ${Math.round(totFTC)}k + reduced consequential costs`;
+  document.getElementById('bdg-frac').textContent = `-${Math.round(eF)}k cheaper than no CHRO`;
+  document.getElementById('bdg-ft').textContent = `-${Math.round(eFT)}k vs. no CHRO · +${Math.round(Math.max(0, eFvsFT))}k vs. Fractional`;
+
+  document.getElementById('insight').innerHTML =
+    `No CHRO: <strong style="color:#993C1D">${Math.round(totN)}k CHF</strong> — most expensive option. ` +
+    `Fractional CHRO (${fstart}k/year): <strong style="color:#0F6E56">${Math.round(totFrac)}k</strong> ` +
+    `(<strong style="color:#0F6E56">-${Math.round(eF)}k</strong> savings). ` +
+    `Full-Time CHRO (${ftsal}k/year): <strong style="color:#185FA5">${Math.round(totFt)}k</strong> ` +
+    `(-${Math.round(eFT)}k vs. no CHRO, but <strong>+${Math.round(Math.max(0, eFvsFT))}k more expensive</strong> than Fractional). ` +
+    `Green area: <strong style="color:#0F6E56">${Math.round(Math.max(0, eFvsFT))}k CHF</strong> savings of Fractional vs. Full-Time.`;
+}
+
+document.querySelectorAll('.faq-calc input[type=range]:not([disabled])').forEach(el => {
+  el.addEventListener('input', compute);
+});
+compute();
+    </script>
 </body>
 </html>
